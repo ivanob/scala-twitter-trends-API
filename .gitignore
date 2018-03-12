@@ -1,2 +1,8 @@
 *.class
 *.log
+*.iml
+application.conf
+.DS_Store
+.idea
+target
+project/target
