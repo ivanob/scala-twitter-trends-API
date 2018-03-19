@@ -2,9 +2,10 @@
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import com.danielasfregola.twitter4s.TwitterRestClient
+import com.danielasfregola.twitter4s.entities.RatedData
+
 import scala.concurrent._
 import ExecutionContext.Implicits.global
-
 import scala.util.{Failure, Success}
 
 //#greeter-companion
@@ -67,7 +68,7 @@ object AkkaQuickstart extends App {
   val t = restClient.trends(1,true)
   t onComplete {
     case Success(x) => {
-      println(x)
+      x.data(0).trends.map(y => restClient.searchTweet(y.query) onComplete { case Success(z)=>println(z)})
     }
     case Failure(ex) => {
       println(ex)
