@@ -61,7 +61,7 @@ class Printer extends Actor with ActorLogging {
 //#printer-actor
 
 //#main-class
-object AkkaQuickstart extends App {
+/*object AkkaQuickstart extends App {
   import Greeter._
 
   val restClient = TwitterRestClient()
@@ -74,7 +74,7 @@ object AkkaQuickstart extends App {
       println(ex)
       //Do something with my error
     }
-  }
+  }*/
 
   // Create the 'helloAkka' actor system
  /* val system: ActorSystem = ActorSystem("helloAkka")
@@ -105,6 +105,6 @@ object AkkaQuickstart extends App {
   goodDayGreeter ! WhoToGreet("Play")
   goodDayGreeter ! Greet
   //#main-send-messages*/
-}
+//}
 //#main-class
 //#full-example
