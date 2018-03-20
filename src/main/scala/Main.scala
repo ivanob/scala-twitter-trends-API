@@ -10,7 +10,7 @@ import akka.pattern.ask
 
 import scala.concurrent.duration._
 
-object Main extends App {
+object Main extends App with TrendsJsonSupport {
   val config = ConfigFactory.load()
   val host = config.getString("http.host")
   val port = config.getInt("http.port")
@@ -20,16 +20,20 @@ object Main extends App {
   val requestHandler = system.actorOf(RequestHandlerActor.props(),"requestHandler")
 
   implicit val executionContext = system.dispatcher
-  implicit val timeout = Timeout(10 seconds)
 
   val route : Route = {
+    implicit val timeout = Timeout(20.seconds)
+
     path("trends") {
       get {
-        onSuccess(requestHandler ? GetTrendsRequest) {
-          case response: TrendsResponse =>
-            complete(StatusCodes.OK,s"Everything is ${response.trends}!")
-          case _ =>
-            complete(StatusCodes.InternalServerError)
+        parameters('country.as[String]) { (country) =>
+          onSuccess(requestHandler ? GetTrendsRequest(country)) {
+            case response: TrendsResponse =>
+              //complete(StatusCodes.OK, s"Everything is ${response.trends}!")
+              complete(response.trends.country)
+            case _ =>
+              complete(StatusCodes.InternalServerError)
+          }
         }
       }
     }
