@@ -3,5 +3,5 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json._
 
 trait TrendsJsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val trendsFormat = jsonFormat2(Trends)
+  implicit val trendsFormat = jsonFormat1(Trends.apply)
 }

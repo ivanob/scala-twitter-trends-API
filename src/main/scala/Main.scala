@@ -30,7 +30,7 @@ object Main extends App with TrendsJsonSupport {
           onSuccess(requestHandler ? GetTrendsRequest(country)) {
             case response: TrendsResponse =>
               //complete(StatusCodes.OK, s"Everything is ${response.trends}!")
-              complete(response.trends.country)
+              complete(response.trends)
             case _ =>
               complete(StatusCodes.InternalServerError)
           }
