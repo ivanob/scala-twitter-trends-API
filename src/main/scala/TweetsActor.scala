@@ -2,7 +2,8 @@ import akka.actor.{Actor, Props}
 
 class TweetsActor extends Actor {
   def receive: Receive = {
-    case GetTop10Tweets =>
+    case word: GetTop10Tweets =>
+      println(word)
       sender() ! Resp10TopTweets(List())
   }
 

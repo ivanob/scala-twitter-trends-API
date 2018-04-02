@@ -24,10 +24,15 @@ class RequestHandlerActor extends Actor with ActorLogging{
         case RespTrends(Left(error)) => println(error)
       })*/
     case RespTrends(trends) => {
-      trends.map(trend => {
-        val tweetActor = system.actorOf(TweetsActor.props(),"TrendsActor")
-      })
-      originalSender ! RespTrendsAndTweets(Trends("country " + "aaa"))
+      trends match {
+          case Right(trendList) => {
+            trendList.map(trend => {
+              val tweetActor = system.actorOf(Props(new TweetsActor))
+              tweetActor ! GetTop10Tweets(trend)
+            })
+            //originalSender ! RespTrendsAndTweets(Trends("country " + "aaa"))
+        }
+      }
     }
   }
 }
