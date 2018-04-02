@@ -8,23 +8,24 @@ class TrendsActor extends Actor {
 
   def receive: Receive = {
     case GetTrends(country) =>
+      val originalSender = sender()
       val restClient = TwitterRestClient()
       val t = restClient.trends(1,true)
       t onComplete {
         case Success(x) => {
           var listTrends = x.data(0).trends.map(y => y.query)
-          RespTrends(Right(listTrends.toList))
+          originalSender ! RespTrends(Right(listTrends.toList))
           //x.data(0).trends.map(y => restClient.searchTweet(y.query) onComplete { case Success(z) => println(z) })
         }
         case Failure(ex) => {
-          RespTrends(Left("ERROR: Couldn't retrieve trends. " + ex))
+          originalSender ! RespTrends(Left("ERROR: Couldn't retrieve trends. " + ex))
         }
       }
   }
 }
 
-case class GetTrends(country: String)
-case class RespTrends(trends: Either[String, List[String]])
+final case class GetTrends(country: String)
+final case class RespTrends(trends: Either[String, List[String]])
 
 object TrendsActor {
   def props(): Props = {

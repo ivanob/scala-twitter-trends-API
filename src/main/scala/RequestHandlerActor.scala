@@ -10,21 +10,31 @@ class RequestHandlerActor extends Actor with ActorLogging{
   val trendsActor = system.actorOf(TrendsActor.props(),"TrendsActor")
   implicit val timeout = Timeout(20.seconds)
   implicit val executionContext = system.dispatcher
+  var originalSender = sender()
 
   def receive: Receive = {
     case GetTrendsRequest(country) =>
+      originalSender = sender()
       log.debug("Received GetTrendsRequest. Parameter country=" + country)
-      val trends = trendsActor ? GetTrends(country)
-      trends.map(resp => resp match {
-        case RespTrends(Right(listTrends)) => println(listTrends)
+      trendsActor ! GetTrends(country)
+        /*case RespTrends(Right(listTrends)) => {
+          println(listTrends)
+          sender() ! RespTrendsAndTweets(Trends("country " + country))
+        }
+        case RespTrends(Left(error)) => println(error)
+      })*/
+    case RespTrends(trends) => {
+      trends.map(trend => {
+        val tweetActor = system.actorOf(TweetsActor.props(),"TrendsActor")
       })
-      sender() ! RespTrendsAndTweets(Trends("country " + country))
+      originalSender ! RespTrendsAndTweets(Trends("country " + "aaa"))
+    }
   }
 }
 
-case class Trends(country: String)
-case class GetTrendsRequest(country: String)
-case class RespTrendsAndTweets(trends: Trends)
+final case class Trends(country: String)
+final case class GetTrendsRequest(country: String)
+final case class RespTrendsAndTweets(trends: Trends)
 
 object RequestHandlerActor {
   def props(): Props = {
