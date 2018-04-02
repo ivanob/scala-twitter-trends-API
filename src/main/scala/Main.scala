@@ -23,12 +23,11 @@ object Main extends App with TrendsJsonSupport {
 
   val route : Route = {
     implicit val timeout = Timeout(20.seconds)
-
     path("trends") {
       get {
         parameters('country.as[String]) { (country) =>
           onSuccess(requestHandler ? GetTrendsRequest(country)) {
-            case response: TrendsResponse =>
+            case response: RespTrendsAndTweets =>
               //complete(StatusCodes.OK, s"Everything is ${response.trends}!")
               complete(response.trends)
             case _ =>
