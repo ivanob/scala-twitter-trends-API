@@ -15,7 +15,6 @@ class TrendsActor extends Actor {
         case Success(x) => {
           var listTrends = x.data(0).trends.map(y => y.query)
           originalSender ! RespTrends(Right(listTrends.toList))
-          //x.data(0).trends.map(y => restClient.searchTweet(y.query) onComplete { case Success(z) => println(z) })
         }
         case Failure(ex) => {
           originalSender ! RespTrends(Left("ERROR: Couldn't retrieve trends. " + ex))
