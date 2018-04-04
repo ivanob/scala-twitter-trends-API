@@ -3,6 +3,7 @@ import akka.actor.Status.Success
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
+import com.danielasfregola.twitter4s.entities.Tweet
 
 class RequestHandlerActor extends Actor with ActorLogging{
   import scala.concurrent.duration._
@@ -31,6 +32,13 @@ class RequestHandlerActor extends Actor with ActorLogging{
               tweetActor ! GetTop10Tweets(trend)
             })
             //originalSender ! RespTrendsAndTweets(Trends("country " + "aaa"))
+        }
+      }
+    }
+    case Resp10TopTweets(data) => {
+      data match {
+        case Right(listTweets) => {
+          val a = 1
         }
       }
     }

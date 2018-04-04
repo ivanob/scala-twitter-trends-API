@@ -16,7 +16,7 @@ class TweetsActor extends Actor {
     case keyword: GetTop10Tweets =>
       restClient.searchTweet(keyword.trend) onComplete {
         case Success(data) => {
-          originalSender ! Resp10TopTweets(Right(data.data.statuses))
+          originalSender ! Resp10TopTweets(Right(data.data.statuses.take(10)))
         }
         case Failure(ex) =>
           originalSender ! Resp10TopTweets(Left("ERROR: Couldn't retrieve trends. " + ex))
